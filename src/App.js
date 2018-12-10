@@ -10,16 +10,17 @@ class App extends Component {
             {name: 'Audi', year: 2016},
             {name: 'Mazda', year: 2010}
         ],
-        pageTitle: 'React components'
+        pageTitle: 'React components',
+        showCars: false
     };
 
-    changeTitleHandler = (newTitle) => {
-        this.setState({pageTitle: newTitle})
+    changeTitleHandler = pageTitle => {
+        this.setState({pageTitle: pageTitle})
     };
 
-    handleInput = (event) => {
+    toggleCarsHandler = () => {
         this.setState({
-            pageTitle: event.target.value
+            showCars: !this.state.showCars
         })
     };
 
@@ -28,26 +29,30 @@ class App extends Component {
             'textAlign': 'center'
         };
 
+        let cars = null;
+
+        if (this.state.showCars) {
+            cars = this.state.cars.map((car, index) => {
+                return (
+                    <Car
+                        key={index}
+                        name={car.name}
+                        year={car.year}
+                        onChangeTitle={() => this.changeTitleHandler(car.name)}
+                    />
+                )
+            })
+        }
+
         return (
             <div style={divStyle}>
                 <h1>{this.state.pageTitle}</h1>
 
-                <input type="text" onChange={this.handleInput} />
-
-                <button onClick={this.changeTitleHandler.bind(this, 'Changed!')}>
-                    Change title
+                <button onClick={this.toggleCarsHandler.bind(this, 'Changed!')}>
+                    Toggle cars
                 </button>
 
-                { this.state.cars.map((car, index) => {
-                    return (
-                        <Car
-                            key={index}
-                            name={car.name}
-                            year={car.year}
-                            onChangeTitle={() => this.changeTitleHandler(car.name)}
-                        />
-                    )
-                }) }
+                { cars }
             </div>
         );
     }
